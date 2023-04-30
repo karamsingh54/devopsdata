@@ -1,0 +1,358 @@
+shell scripts for dbbackup
+
+#!/bin/bash
+
+# Set variables
+USER="username"
+PASSWORD="password"
+DATABASE="database_name"
+BACKUP_DIR="/path/to/backup/directory"
+DATE=$(date +"%Y-%m-%d")
+
+# Create backup directory if it doesn't exist
+if [ ! -d "$BACKUP_DIR" ]; then
+  mkdir -p "$BACKUP_DIR"
+fi
+
+# Backup the database
+mysqldump --user="$USER" --password="$PASSWORD" "$DATABASE" > "$BACKUP_DIR/$DATABASE-$DATE.sql"
+
+# Compress the backup file
+gzip "$BACKUP_DIR/$DATABASE-$DATE.sql"
+
+# Delete backup files older than 30 days
+find "$BACKUP_DIR" -name "*.gz" -type f -mtime +30 -delete
+
+
+
+
+backup with encription 
+
+#!/bin/bash
+
+# Set variables
+USER="username"
+PASSWORD="password"
+DATABASE="database_name"
+BACKUP_DIR="/path/to/backup/directory"
+DATE=$(date +"%Y-%m-%d")
+
+# Create backup directory if it doesn't exist
+if [ ! -d "$BACKUP_DIR" ]; then
+  mkdir -p "$BACKUP_DIR"
+fi
+
+# Backup the database
+mysqldump --user="$USER" --password="$PASSWORD" --single-transaction --quick --lock-tables=false "$DATABASE" > "$BACKUP_DIR/$DATABASE-$DATE.sql"
+
+# Check if the backup was successful
+if [ "$?" -eq 0 ]; then
+  # Encrypt the backup file using GPG
+  gpg --recipient "backup_key" --encrypt "$BACKUP_DIR/$DATABASE-$DATE.sql"
+
+  # Remove the unencrypted backup file
+  rm -f "$BACKUP_DIR/$DATABASE-$DATE.sql"
+
+  # Delete backup files older than 30 days
+  find "$BACKUP_DIR" -name "*.gpg" -type f -mtime +30 -delete
+else
+  echo "Backup failed"
+fi
+
+
+
+
+
+
+
+
+
+
+
+jenkins php production pipeline 
+
+pipeline {
+  agent any
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Build') {
+      steps {
+        sh 'composer install --no-dev --optimize-autoloader' // Install production dependencies
+        sh 'npm install --only=production' // Install production dependencies
+        sh 'npm run prod' // Build frontend assets for production
+      }
+    }
+
+    stage('Deploy') {
+      environment {
+        SSH_KEY = credentials('ssh-key') // Define the SSH key credentials
+      }
+      steps {
+        sshagent(['ssh-key']) {
+          sh 'rsync -avz --exclude-from=.rsyncignore ./ user@production-server:/var/www/html' // Deploy the code using rsync
+          sh 'ssh user@production-server "cd /var/www/html && composer install --no-dev --optimize-autoloader && php artisan migrate --force"' // Install production dependencies and run database migrations
+          sh 'ssh user@production-server "sudo service apache2 restart"' // Restart the web server
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+mysql plugin in jenkins
+pipeline {
+  agent any
+
+  stages {
+    stage('MySQL Query') {
+      steps {
+        withMySQL([mysqlConnection(
+          credentialsId: 'mysql-credentials', // The ID of the MySQL credentials in the Jenkins credentials store
+          databaseName: 'mydatabase', // The name of the MySQL database
+          hostName: 'localhost', // The MySQL hostname
+          port: 3306, // The MySQL port
+          useSSL: false // Whether to use SSL for the MySQL connection
+        )]) {
+          sh 'mysql -e "SELECT * FROM mytable" -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE' // Run a MySQL query
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+jenkin s production pipeline
+
+pipeline {
+  agent any
+
+  environment {
+    DOCKER_REGISTRY = credentials('docker-registry') // Define the Docker registry credentials
+    SSH_KEY = credentials('ssh-key') // Define the SSH key credentials
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Build and Push Docker Image') {
+      steps {
+        sh 'docker build -t myapp:$BUILD_NUMBER .'
+        sh 'docker tag myapp:$BUILD_NUMBER $DOCKER_REGISTRY/myapp:$BUILD_NUMBER'
+        withCredentials([usernamePassword(credentialsId: 'docker-registry', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          sh "docker login -u $USERNAME -p $PASSWORD $DOCKER_REGISTRY"
+        }
+        sh "docker push $DOCKER_REGISTRY/myapp:$BUILD_NUMBER"
+      }
+    }
+
+    stage('Deploy to Production') {
+      steps {
+        sshagent(['ssh-key']) {
+          sh 'ssh user@production-server "docker pull $DOCKER_REGISTRY/myapp:$BUILD_NUMBER"'
+          sh 'ssh user@production-server "docker stop myapp || true"'
+          sh 'ssh user@production-server "docker rm myapp || true"'
+          sh 'ssh user@production-server "docker run -d --name myapp -p 80:80 $DOCKER_REGISTRY/myapp:$BUILD_NUMBER"'
+        }
+      }
+    }
+  }
+}
+
+
+
+pipeline {
+  agent any
+  
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Run Tests') {
+      steps {
+        sh 'mvn clean test'
+      }
+    }
+
+    stage('Build') {
+      steps {
+        sh 'mvn clean package'
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        sh 'cp target/myapp.war /path/to/tomcat/webapps'
+      }
+    }
+  }
+}
+
+
+
+
+server patch 
+
+pipeline {
+  agent any
+  
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('Run Tests') {
+      steps {
+        sh 'mvn clean test'
+      }
+    }
+
+    stage('Build') {
+      steps {
+        sh 'mvn clean package'
+      }
+    }
+
+    stage('Deploy') {
+      steps {
+        sh 'cp target/myapp.war /path/to/tomcat/webapps'
+      }
+    }
+  }
+}
+
+
+
+
+- name: Update packages on all servers
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: Update package cache
+    yum:
+      name: '*'
+      state: latest
+      update_cache: yes
+    when: ansible_pkg_mgr == 'yum'
+
+  - name: Update package cache
+    dnf:
+      name: '*'
+      state: latest
+      update_cache: yes
+    when: ansible_pkg_mgr == 'dnf'
+
+  - name: Upgrade packages
+    yum:
+      name: '*'
+      state: latest
+    when: ansible_pkg_mgr == 'yum'
+
+  - name: Upgrade packages
+    dnf:
+      name: '*'
+      state: latest
+    when: ansible_pkg_mgr == 'dnf'
+
+
+
+
+
+
+
+pipeline {
+    agent any
+    environment {
+        GIT_BRANCH = 'dev'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: "${GIT_BRANCH}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-credentials', url: 'https://github.com/your-org/your-repo.git']]])
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'ssh -i /path/to/key.pem user@server "sudo systemctl stop your-app"'
+                sh 'scp -i /path/to/key.pem target/your-app.jar user@server:/path/to/your-app.jar'
+                sh 'ssh -i /path/to/key.pem user@server "sudo systemctl start your-app"'
+            }
+        }
+    }
+}
+
+
+
+
+pipeline {
+    agent any
+    environment {
+        GIT_BRANCH = 'production'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: "${GIT_BRANCH}"]], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-credentials', url: 'https://github.com/your-org/your-repo.git']]])
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'ssh -i /path/to/key.pem user@server "sudo systemctl stop your-app"'
+                sh 'scp -i /path/to/key.pem target/your-app.jar user@server:/path/to/your-app.jar'
+                sh 'ssh -i /path/to/key.pem user@server "sudo systemctl start your-app"'
+            }
+        }
+    }
+}
+
+
+
+
+#!/bin/bash
+
+# Define an array of usernames to add
+usernames=("user1" "user2" "user3")
+
+# Loop through the array and add each user
+for username in "${usernames[@]}"
+do
+    # Check if the user already exists
+    if id "$username" &>/dev/null; then
+        echo "User $username already exists, skipping."
+    else
+        # Add the user with a default password and home directory
+        useradd -m -s /bin/bash "$username"
+        echo "User $username added successfully."
+    fi
+done

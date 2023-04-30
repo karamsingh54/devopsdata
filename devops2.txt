@@ -1,0 +1,734 @@
+terrform for complete vpc
+
+
+provider "aws" {
+  region = "us-east-1"
+}
+
+# Create VPC
+resource "aws_vpc" "production" {
+  cidr_block = "10.0.0.0/16"
+
+  tags = {
+    Name = "production-vpc"
+    Environment = "production"
+  }
+}
+
+# Create Internet Gateway
+resource "aws_internet_gateway" "production" {
+  vpc_id = aws_vpc.production.id
+
+  tags = {
+    Name = "production-igw"
+    Environment = "production"
+  }
+}
+
+# Create Public Subnet
+resource "aws_subnet" "public" {
+  vpc_id     = aws_vpc.production.id
+  cidr_block = "10.0.1.0/24"
+  availability_zone = "us-east-1a"
+
+  tags = {
+    Name = "public-subnet"
+    Environment = "production"
+  }
+}
+
+# Create Private Subnet
+resource "aws_subnet" "private" {
+  vpc_id     = aws_vpc.production.id
+  cidr_block = "10.0.2.0/24"
+  availability_zone = "us-east-1b"
+
+  tags = {
+    Name = "private-subnet"
+    Environment = "production"
+  }
+}
+
+# Create Route Tables
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.production.id
+
+  tags = {
+    Name = "public-route-table"
+    Environment = "production"
+  }
+}
+
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.production.id
+
+  tags = {
+    Name = "private-route-table"
+    Environment = "production"
+  }
+}
+
+# Associate Subnets with Route Tables
+resource "aws_route_table_association" "public" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "private" {
+  subnet_id      = aws_subnet.private.id
+  route_table_id = aws_route_table.private.id
+}
+
+# Create NAT Gateway
+resource "aws_nat_gateway" "production" {
+  allocation_id = aws_eip.nat.id
+  subnet_id     = aws_subnet.public.id
+
+  tags = {
+    Name = "production-nat"
+    Environment = "production"
+  }
+}
+
+# Create Elastic IP for NAT Gateway
+resource "aws_eip" "nat" {
+  vpc = true
+
+  tags = {
+    Name = "production-nat-eip"
+    Environment = "production"
+  }
+}
+
+# Create Security Groups
+resource "aws_security_group" "public" {
+  vpc_id = aws_vpc.production.id
+
+  ingress {
+    from_port = 22
+    to_port   = 22
+    protocol  = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 80
+    to_port   = 80
+    protocol  = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 443
+    to_port   = 443
+    protocol  = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+ 
+
+
+
+
+
+
+
+for multiple ec2 instance
+
+
+provider "aws" {
+  region = "us-east-1"
+}
+
+# Create EC2 Instances
+resource "aws_instance" "web_servers" {
+  count = 3
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t2.micro"
+  subnet_id = aws_subnet.private.id
+  key_name = "my-key"
+
+  tags = {
+    Name = "web-server-${count.index+1}"
+    Environment = "production"
+  }
+
+  # Configure the EC2 instances with UserData
+  user_data = <<-EOF
+              #!/bin/bash
+              yum update -y
+              yum install -y httpd
+              service httpd start
+              chkconfig httpd on
+              EOF
+
+  # Create a security group for the EC2 instances
+  vpc_security_group_ids = [aws_security_group.web.id]
+}
+
+# Create Security Group for EC2 Instances
+resource "aws_security_group" "web" {
+  name_prefix = "web-"
+  vpc_id      = aws_vpc.production.id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+
+
+
+variable "region" {
+  default = "us-east-1"
+}
+
+variable "instance_count" {
+  default = 3
+}
+
+variable "instance_type" {
+  default = "t2.micro"
+}
+
+variable "ami_id" {
+  default = "ami-0c55b159cbfafe1f0"
+}
+
+variable "vpc_id" {
+  default = "vpc-12345678"
+}
+
+variable "subnet_id" {
+  default = "subnet-12345678"
+}
+
+variable "key_name" {
+  default = "my-key"
+}
+
+provider "aws" {
+  region = var.region
+}
+
+# Create EC2 Instances
+resource "aws_instance" "web_servers" {
+  count = var.instance_count
+  ami           = var.ami_id
+  instance_type = var.instance_type
+  subnet_id = var.subnet_id
+  key_name = var.key_name
+
+  tags = {
+    Name = "web-server-${count.index+1}"
+    Environment = "production"
+  }
+
+  # Configure the EC2 instances with UserData
+  user_data = <<-EOF
+              #!/bin/bash
+              yum update -y
+              yum install -y httpd
+              service httpd start
+              chkconfig httpd on
+              EOF
+
+  # Create a security group for the EC2 instances
+  vpc_security_group_ids = [aws_security_group.web.id]
+}
+
+# Create Security Group for EC2 Instances
+resource "aws_security_group" "web" {
+  name_prefix = "web-"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+
+
+
+
+variable "region" {
+  default = "us-west-2"
+}
+
+variable "vpc_cidr_block" {
+  default = "10.0.0.0/16"
+}
+
+variable "subnet_cidr_blocks" {
+  default = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+}
+
+variable "availability_zones" {
+  default = ["us-west-2a", "us-west-2b", "us-west-2c"]
+}
+
+provider "aws" {
+  region = var.region
+}
+
+# Create VPC
+resource "aws_vpc" "my_vpc" {
+  cidr_block = var.vpc_cidr_block
+
+  tags = {
+    Name = "my-vpc"
+    Environment = "production"
+  }
+}
+
+# Create Internet Gateway
+resource "aws_internet_gateway" "my_igw" {
+  vpc_id = aws_vpc.my_vpc.id
+
+  tags = {
+    Name = "my-igw"
+    Environment = "production"
+  }
+}
+
+# Attach Internet Gateway to VPC
+resource "aws_vpc_attachment" "my_vpc_attachment" {
+  vpc_id = aws_vpc.my_vpc.id
+  internet_gateway_id = aws_internet_gateway.my_igw.id
+}
+
+# Create Subnets
+resource "aws_subnet" "my_subnets" {
+  count = length(var.subnet_cidr_blocks)
+
+  cidr_block = var.subnet_cidr_blocks[count.index]
+  availability_zone = element(var.availability_zones, count.index)
+  vpc_id = aws_vpc.my_vpc.id
+
+  tags = {
+    Name = "my-subnet-${count.index+1}"
+    Environment = "production"
+  }
+}
+
+# Create Route Table
+resource "aws_route_table" "my_route_table" {
+  vpc_id = aws_vpc.my_vpc.id
+
+  tags = {
+    Name = "my-route-table"
+    Environment = "production"
+  }
+}
+
+# Associate Subnets with Route Table
+resource "aws_route_table_association" "my_route_table_association" {
+  count = length(var.subnet_cidr_blocks)
+
+  subnet_id = aws_subnet.my_subnets[count.index].id
+  route_table_id = aws_route_table.my_route_table.id
+}
+
+
+
+
+
+
+---
+- name: Install packages
+  hosts: all
+  become: true
+
+  vars:
+    packages:
+      - package1
+      - package2
+      - package3
+
+  tasks:
+    - name: Update package cache
+      apt:
+        update_cache: yes
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: Install packages
+      package:
+        name: "{{ packages }}"
+        state: present
+      when: ansible_pkg_mgr == 'apt'
+
+    - name: Install packages
+      yum:
+        name: "{{ packages }}"
+        state: present
+      when: ansible_pkg_mgr == 'yum'
+
+
+
+
+
+---
+- name: Install Prometheus
+  hosts: prometheus
+  become: yes
+  vars:
+    prometheus_version: "2.30.0"
+    prometheus_install_dir: "/opt/prometheus"
+    prometheus_user: "prometheus"
+    prometheus_group: "prometheus"
+    prometheus_config_file: "{{ prometheus_install_dir }}/prometheus.yml"
+  tasks:
+    - name: Create Prometheus user and group
+      group:
+        name: "{{ prometheus_group }}"
+      user:
+        name: "{{ prometheus_user }}"
+        group: "{{ prometheus_group }}"
+        shell: /sbin/nologin
+        home: "{{ prometheus_install_dir }}"
+        system: yes
+        create_home: no
+
+    - name: Install required packages
+      yum:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - wget
+        - tar
+
+    - name: Download Prometheus
+      get_url:
+        url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+        dest: "/tmp/prometheus.tar.gz"
+
+    - name: Extract Prometheus tarball
+      unarchive:
+        src: "/tmp/prometheus.tar.gz"
+        dest: "{{ prometheus_install_dir }}"
+        remote_src: yes
+        owner: "{{ prometheus_user }}"
+        group: "{{ prometheus_group }}"
+
+    - name: Copy Prometheus config file
+      copy:
+        src: "prometheus.yml"
+        dest: "{{ prometheus_config_file }}"
+        owner: "{{ prometheus_user }}"
+        group: "{{ prometheus_group }}"
+
+    - name: Set up Prometheus service
+      systemd:
+        name: prometheus
+        enabled: yes
+        state: started
+        daemon_reload: yes
+        user: "{{ prometheus_user }}"
+        group: "{{ prometheus_group }}"
+        exec_start: "{{ prometheus_install_dir }}/prometheus --config.file={{ prometheus_config_file }} --web.enable-admin-api"
+
+
+
+---
+- name: Install and configure Grafana
+  hosts: <your_host_group>
+  become: true
+
+  vars:
+    grafana_version: 8.2.2
+    grafana_port: 3000
+
+  tasks:
+    - name: Add Grafana GPG key
+      apt_key:
+        url: https://packages.grafana.com/gpg.key
+        state: present
+
+    - name: Add Grafana APT repository
+      apt_repository:
+        repo: deb https://packages.grafana.com/oss/deb stable main
+        state: present
+
+    - name: Install Grafana package
+      apt:
+        name: grafana
+        state: latest
+
+    - name: Start Grafana service
+      service:
+        name: grafana-server
+        state: started
+        enabled: yes
+
+    - name: Configure Grafana server
+      ini_file:
+        dest: /etc/grafana/grafana.ini
+        section: server
+        option: http_port
+        value: "{{ grafana_port }}"
+
+    - name: Restart Grafana service
+      service:
+        name: grafana-server
+        state: restarted
+
+
+
+
+
+---
+- name: Install Jenkins
+  hosts: <your_host_group>
+  become: true
+
+  tasks:
+    - name: Add Jenkins APT key
+      apt_key:
+        url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
+        state: present
+
+    - name: Add Jenkins APT repository
+      apt_repository:
+        repo: deb https://pkg.jenkins.io/debian-stable binary/
+        state: present
+
+    - name: Install Jenkins package
+      apt:
+        name: jenkins
+        state: latest
+
+    - name: Start Jenkins service
+      service:
+        name: jenkins
+        state: started
+        enabled: yes
+
+
+
+
+
+---
+- name: Install Docker
+  hosts: <your_host_group>
+  become: true
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install apt packages required for Docker
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg2
+          - software-properties-common
+        state: latest
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+
+    - name: Install Docker CE
+      apt:
+        name: docker-ce
+        state: latest
+
+    - name: Add user to the docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+
+
+
+
+---
+- name: Install Kubernetes
+  hosts: <your_host_group>
+  become: true
+
+  tasks:
+    - name: Install apt-transport-https and curl
+      apt:
+        name:
+          - apt-transport-https
+          - curl
+        state: latest
+
+    - name: Add Kubernetes APT key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+
+    - name: Add Kubernetes APT repository
+      apt_repository:
+        repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+        state: present
+        filename: kubernetes
+
+    - name: Install Kubernetes packages
+      apt:
+        name:
+          - kubeadm
+          - kubelet
+          - kubectl
+        state: latest
+
+    - name: Enable and start kubelet service
+      service:
+        name: kubelet
+        enabled: yes
+        state: started
+
+
+
+
+
+
+---
+- name: Install Kubernetes with Kubeadm
+  hosts: <your_host_group>
+  become: true
+
+  vars:
+    k8s_version: 1.22.2-00
+    k8s_pod_subnet: 10.244.0.0/16
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install apt packages required for Kubernetes and Docker
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
+        state: latest
+
+    - name: Add Kubernetes GPG key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+
+    - name: Add Kubernetes APT repository
+      apt_repository:
+        repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+        state: present
+
+    - name: Install Kubeadm, Kubectl, and Kubelet
+      apt:
+        name:
+          - kubelet={{ k8s_version }}
+          - kubeadm={{ k8s_version }}
+          - kubectl={{ k8s_version }}
+        state: latest
+
+    - name: Disable swap
+      sysctl:
+        name: vm.swappiness
+        value: 0
+        state: present
+        sysctl_set: yes
+
+    - name: Disable swap permanently
+      copy:
+        dest: /etc/fstab
+        content: |
+          /swapfile swap swap defaults 0 0
+      when: ansible_swaptotal_mb > 0
+
+    - name: Set net.bridge.bridge-nf-call-iptables to 1
+      sysctl:
+        name: net.bridge.bridge-nf-call-iptables
+        value: 1
+        state: present
+        sysctl_set: yes
+
+    - name: Initialize the control plane
+      command: kubeadm init --pod-network-cidr={{ k8s_pod_subnet }}
+      args:
+        creates: /etc/kubernetes/admin.conf
+      register: kubeadm_init_output
+
+    - name: Save join command for worker nodes
+      set_fact:
+        k8s_join_command: "{{ kubeadm_init_output.stdout_lines[-1] }}"
+
+    - name: Copy kubeconfig to user's home directory
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/{{ ansible_user }}/.kube/config
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 0644
+
+    - name: Install Calico network add-on
+      become_user: "{{ ansible_user }}"
+      command: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml"

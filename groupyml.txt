@@ -1,0 +1,37 @@
+---
+  - name: want to add group
+     hosts: dev
+     tasks:
+                 - name: adding group
+                   group:
+                           name: laptop
+                           state: present
+                  - name: adding rupesh sir
+                    user:
+                            name: rupesh
+                            state: present
+                  - name: installing package
+                    yum :
+                             name: httpd
+                             state: present
+
+
+  - name: using test group
+     hosts: test
+     tasks:
+                
+                  - name: installing package
+                    yum :
+                             name: httpd
+                             state: present
+
+                  - name: start the service
+                    service:
+                                 name: httpd
+                                 state: started
+                                 enabled: yes
+
+
+
+
+ 

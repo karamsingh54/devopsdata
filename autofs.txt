@@ -1,0 +1,205 @@
+    1  yum repolist
+    2   dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm -y
+    3  yum install nfs* -y
+    4  mkdir /public  /private
+    5  ls
+    6  cd /
+    7  ls
+    8  chmod 777 private/ public/
+    9  ls -l
+   10  cd public/
+   11  cal > calpublic.txt
+   12  cat calpublic.txt 
+   13  cd ..
+   14  cd private/
+   15  ls
+   16  cat 2020 > calprivate.txt
+   17  cal 2020 > calprivate.txt
+   18  cat calprivate.txt 
+   19  vim /etc/exports
+   20  vi /etc/exports
+   21  exports -arvf
+   22  exportfs -arvf
+   23  yum install bash-completion
+   24   cat /etc/profile.d/bash_completion.sh
+   25  source /etc/profile.d/bash_completion.sh
+   26  logout 
+   27  exit
+   28  systemctl status firewalld
+   29  systemctl  start nfs
+   30  systemctl start nfs
+   31  systemctl start nfs-server
+   32  systemctl enable  nfs-server
+   33  vi /etc/exports
+   34  exports -arvf
+   35  exportfs -avrf
+   36  systemctl  start nfs
+   37  systemctl start nfs-server
+   38  systemctl enable  nfs-server
+   39  setlinux 0
+   40  setenforce 0
+   41  systemctl status firewalld
+   42  systemctl status firewall
+   43  systemctl status iptable
+   44  ping 172.31.93.35
+   45  vi /etc/exports
+   46  systemctl start nfs-server
+   47  cd /p
+   48  cd /public/
+   49  ls
+   50  cd ..
+   51  ls -l
+   52  exportfs -r
+   53  exportfs -avf
+   54  hostnamectl set-hostname server
+   55  vi /etc/hosts
+   56  exit
+   57  ping server
+   58  exportfs -avfs
+   59  ping client
+   60  cd /public/
+   61  ls
+   62  ls -l
+   63  cd ..
+   64  ls
+   65  exportfs -avf
+   66  ls
+   67  history > k
+
+
+
+    1   dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm -y
+    2  yum install autofs -y
+    3  mkdir /automount
+    4  vi /etc/auto.master
+    5  ls
+    6  vi /etc/automount.txt
+    7  mkdir -p /automount/public ; mkdir -p /automount/private
+    8  systemctl start autofs
+    9  systemctl enable autofs
+   10  df -hT
+   11  mount -a
+   12  cd /automount/pu
+   13  cd /automount/public
+   14  ls
+   15  cd /
+   16  ;s
+   17  ls
+   18  cd automount/
+   19  ls
+   20  vi /etc/automount.txt 
+   21  mkdir -p /automount/public ; mkdir -p /automount/private
+   22  mkdir -p /automount/public ; mkdir -p /automount/private
+   23  cd /automount/
+   24  ls
+   25  systemctl stop autofs
+   26  mkdir public
+   27  df -hT
+   28  exportfs -a
+   29  mount -a
+   30  df -hT
+   31  ls
+   32  mkdir private
+   33  mkdir public
+   34  mkdir r
+   35  cd /
+   36  ls
+   37  ls -l
+   38  chmod 777 automount/
+   39  mkdir -p /automount/public
+   40  vi /etc/auto.master
+   41  vi /etc/automount.txt 
+   42  cd /automount/
+   43  mkdir k
+   44  setenforce 0
+   45  mkdir public
+   46  cd ..
+   47  ls
+   48  systemctl status autofs
+   49  systemctl enable --now  autofs
+   50  systemctl status autofs
+   51  systemctl stop autofs
+   52  mkdir -p /karam/public
+   53  ls
+   54  mkdir -p /karam/private
+   55  vi /etc/auto.master
+   56  cat /etc/automount.txt 
+   57  rm -rf automount/
+   58  ls
+   59  cd karam/
+   60  ls
+   61  cd ..
+   62  mount -a
+   63  systemctl enable --now autofs
+   64  df -hT
+   65  mount -a
+   66  cd /karam/
+   67  ls
+   68  df hT
+   69  df -hT
+   70  cd /karam/
+   71  ls
+   72  hostnamectl set-hostname client
+   73  vi /etc/hosts
+   74  exit
+   75  ping server
+   76  systemctl restart autofs
+   77  mount -a
+   78  cd /karam/
+   79  ls
+   80  cd public
+   81  rm -rf /karam/
+   82  cd ..
+   83  rm -rf karam/
+   84  ls
+   85  systemctl stop autofs
+   86  rm -rf karam/
+   87  ls
+   88  mkdir -p /automount/public ; mkdir -p /automount/private
+   89  ld
+   90  chmod /automount/
+   91  chmod 777 /automount/
+   92  vi /etc/auto.master
+   93  ls
+   94  cd automount/
+   95  ls
+   96  systemctl enable --now autofs
+   97  ls
+   98  mount -a
+   99  ls
+  100  cd private/
+  101  ls
+  102  df -hT
+  103  cd ..
+  104  cd /
+  105  ls
+  106  cd automount/
+  107  ls
+  108  cd /
+  109  yum install nfs-utils -y
+  110  showmount -e server
+  111  cd /automount/
+  112  ls
+  113  cd public
+  114  ls
+  115  df -hT
+  116  cd /automount/private
+  117  ls
+  118  cat calprivate.txt 
+  119  df -hT
+  120  systemctl status autofs
+  121  ls
+  122  cd ..
+  123  df -hT
+  124  df -hT
+  125  cd /automount/public
+  126  ls
+  127  rm -rf calpublic.txt 
+  128  history > k
+  129  history
+  130  ls
+  131  cd /
+  132  ls
+  133  history > kk
+
+

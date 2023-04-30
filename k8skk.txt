@@ -1,0 +1,545 @@
+hostnamectl set-hostname master
+hostnamectl set-hostname worker
+   
+
+
+
+  curl -fsSL https://get.docker.com -o get-docker.sh
+      sudo sh get-docker.sh
+    docker --version
+    vi /etc/docker/daemon.json
+
+
+{
+  "exec-opts": ["native.cgroupdriver=systemd"]
+}
+
+systemctl restart docker
+  
+systemctl enable docker
+systemctl status docker
+
+
+     git clone https://github.com/Mirantis/cri-dockerd.git
+     wget https://storage.googleapis.com/golang/getgo/installer_linux
+     chmod +x ./installer_linux
+     ./installer_linux
+     source ~/.bash_profile
+     cd cri-dockerd
+     mkdir bin
+     go build -o bin/cri-dockerd
+     mkdir -p /usr/local/bin
+     install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/cri-dockerd
+     cp -a packaging/systemd/* /etc/systemd/system
+     sed -i -e 's,/usr/bin/cri-dockerd,/usr/local/bin/cri-dockerd,' /etc/systemd/system/cri-docker.service
+     systemctl daemon-reload
+     systemctl enable cri-docker.service
+     systemctl enable --now cri-docker.socket
+     systemctl status cri-docker.service
+    
+
+
+
+     sudo apt-get update
+     sudo apt-get install -y apt-transport-https ca-certificates curl
+     sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+     echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+     sudo apt-get update
+    sudo apt-get install -y kubelet kubeadm kubectl
+     sudo apt-mark hold kubelet kubeadm kubectl
+   kubeadm init --cri-socket unix:///var/run/cri-dockerd.sock
+  
+     vi /root/.bash_profile
+    vi ~/.profile
+   source ~/.profile
+   49  cd /home/ubuntu/
+   50  ls
+   51  kubectl get nodes
+   52  curl https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml -O
+   53  ls
+    kubectl apply -f calico.yaml
+     kubectl get nodes
+
+
+on worker  node
+
+
+ curl -fsSL https://get.docker.com -o get-docker.sh
+    3  sudo sh ./get-docker.sh --dry-run
+    4  curl -fsSL https://get.docker.com -o get-docker.sh
+    5  sudo sh get-docker.sh
+    6  Executing docker install script, commit: 7cae5f8b0decc17d6571f9f52eb840fbc13b2737
+    7  <...>
+    8  docker --version
+    9  vi /etc/docker/daemon.json
+   10  systemctl restart docker
+   11  systemctl status docker
+   12  systemctl enable docker
+   13  git clone https://github.com/Mirantis/cri-dockerd.git
+   14  wget https://storage.googleapis.com/golang/getgo/installer_linux
+   15  chmod +x ./installer_linux
+   16  ./installer_linux
+   17  source ~/.bash_profile
+   18  cd cri-dockerd
+   19  mkdir bin
+   20  go build -o bin/cri-dockerd
+   21  mkdir -p /usr/local/bin
+   22  install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/cri-dockerd
+   23  cp -a packaging/systemd/* /etc/systemd/system
+   24  sed -i -e 's,/usr/bin/cri-dockerd,/usr/local/bin/cri-dockerd,' /etc/systemd/system/cri-docker.service
+   25  systemctl daemon-reload
+   26  systemctl enable cri-docker.service
+   27  systemctl enable --now cri-docker.socket
+   28  systemctl status cri-docker.service
+   29  sudo apt-get update
+   30  sudo apt-get install -y apt-transport-https ca-certificates curl
+   31  sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+   32  echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+   33  sudo apt-get update
+   34  sudo apt-get install -y kubelet kubeadm kubectl
+   35  sudo apt-mark hold kubelet kubeadm kubectl
+   36  kubeadm join 172.31.86.192:6443 --token bmuubg.2ibitnjcgqz21ii2         --discovery-token-ca-cert-hash sha256:bc9c8dff430944e0c25d9ab5673fd79ea0b5145af55bd63bffd56b6684100e6b --cri-socket unix:///var/run/cri-dockerd.sock
+   37  kubectl get nodes
+
+
+kubeadm join 172.31.19.8:6443 --token t0urhy.xun53uctiixif9gm \
+        --discovery-token-ca-cert-hash sha256:473ac499c9bdd5b31e58ead741058525c68d78b06e07a5b46a8c2779d3324144  --cri-socket unix:///var/run/cri-dockerd.sock
+
+
+
+
+
+
+
+
+
+
+
+- name: Create daemon.json config file
+       file:
+         path: "/etc/docker/daemon.json"
+         state: "touch"
+
+     - name: add modules in conf file
+       blockinfile:
+         path: "/etc/docker/daemon.json"
+         block: |
+            {
+              "exec-opts": ["native.cgroupdriver=systemd"]
+              }
+
+            
+
+
+
+
+
+
+apt-get update 
+apt-get install bash-completion
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+   name: rss-site
+   labels:
+      app: web
+spec:
+   containers:
+
+    - name: front-end
+      image: nginx
+          ports:
+
+       +- containerPort: 80
+
+    - name: rss-reader
+
+      image: nickchase/rss-php-nginx:v1
+
+      ports:
+
+        - containerPort: 88
+
+kubectl get pods
+
+
+
+
+
+
+kubeadm join 172.31.29.64:6443 --token n1feu0.2ncnjbfgrp5qd5jj \
+        --discovery-token-ca-cert-hash sha256:ff4ef2aae53b777fad3c3238728517a1bb1d6fbe6b4842237608cc4ae26f5913 --cri-socket unix:///var/run/cri-dockerd.sock
+
+
+
+
+
+
+
+
+export KUBECONFIG=/etc/kubernetes/admin.conf
+
+
+
+
+
+
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+  labels:
+    app: website
+spec:
+  containers:
+  - name: mysecondcontainer
+    image: nginx
+
+
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sleeper
+  labels:
+    app: sleeper
+spec:
+  containers:
+  - name: mythirdcontainer
+    image: ubuntu
+        command:
+          - "sleep"
+          - 10000
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mydb
+  labels:
+    app: database
+spec:
+  containers:
+  - name: container4
+    image: mysql
+    ports:
+            - containerPort: 3306
+
+
+
+
+
+
+
+
+
+
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mydb
+  labels:
+    name: mysql-pod
+    context: docker-k8s-lab
+spec:
+  containers:
+    - name: mysql
+      image: mysql:latest
+      env:
+        - name: "MYSQL_USER"
+          value: "mysql"
+        - name: "MYSQL_PASSWORD"
+          value: "mysql"
+        - name: "MYSQL_DATABASE"
+          value: "sample"
+        - name: "MYSQL_ROOT_PASSWORD"
+          value: "supersecret"
+      ports:
+        - containerPort: 3306
+
+
+
+
+CREATE USER 'grass'@'localhost' IDENTIFIED BY 'yourPassword';
+GRANT ALL ON *.* TO 'grass'@'localhost';
+
+
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nonstoppod
+  labels:
+    app: nonstop
+spec:
+  containers:
+   -  name: autostart
+      image: alpine
+      command:
+      - /bin/sh
+      - "-c"
+      - "sleep 15"
+  
+  restartPolicy: Always
+
+
+
+
+
+
+
+
+
+
+
+
+
+containers:
+      - args:
+        - --cert-dir=/tmp
+        - --secure-port=4443
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
+        command:
+        - /metrics-server
+        - --kubelet-insecure-tls
+        - --kubelet-preferred-address-types=InternalIP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ hostnamectl set-hostname master
+    2  curl -fsSL https://get.docker.com -o get-docker.sh
+    3  kubectl get nodes
+    4  apt-get update
+    5  apt-get install bash-completion
+    6  kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+    7  exit
+    8  clear
+    9  kubectl run mywebserver --image=httpd
+   10  export KUBECONFIG=/etc/kubernetes/admin.conf
+   11  kubectl run mywebserver --image=httpd
+   12  clear
+   13  kubectl get pods
+   14  kubectl label pod mywebserver app=web
+   15  vi nginx.yml
+   16  kubectl create -f nginx.yml
+   17  kubectl get pods -o wide
+   18  vi ubuntu.yml
+   19  kubectl create -f ubuntu.yml
+   20  vi ubuntu.yml
+   21  kubectl create -f ubuntu.yml
+   22  kubectl get pods
+   23  clear
+   24  vi mysql.yml'
+   25  ls
+   26  vi mysql.yml
+   27  kubectl create -f mysql.yml
+   28  kubectl get pods -o wide
+   29  cat mysql.yml
+   30  kubectl get pods -o wide
+   31  kubectl get pods -o wide
+   32  kubectl describe pod mydb
+   33  vi mysql.yml
+   34  kubectl create -f mysql.yml
+   35  kubectl delete pod mydb
+   36  kubectl create -f mysql.yml
+   37  kubectl get pods -o wide
+   38  kubectl exec -it mydb -- /bin/bash
+   39  clear
+   40  kubectl get pods
+   41  kubectl get pods -o wide
+   42  cat mysql.yml ubuntu.yml nginx.yml
+   43  ls
+   44  kubectl exec -it myapp --bin/bash
+   45  kubectl exec -it myapp -- bin/bash
+   46  clear
+   47  kubectl get pods
+   48  kubectl get pods -o wide
+   49  curl http://192.168.182.1
+   50  kubectl exec -it myapp -- bin/bash
+   51  vi index.html
+   52  kubectl exec -it mywebserver -- /bin/bash
+   53  kubectl cp index.html mywebserver:/usr/local/apache2/htdocs/
+   54  curl http://192.168.235.129
+   55  vi autostart.yml
+   56  cat autostart.yml
+   57  kubectl create -f al
+   58  kubectl create -f autostart.yml
+   59  kubectl get pods
+   60  kubectl get pods -w
+   61  kubectl get pods -w
+   62  kubectl get pods -w
+   63  kubectl get pods -w
+   64  kubectl describe pod nonstoppod
+   65  kubectl get pods -w
+   66  cat autostart.yml
+   67  watch kubectl get pods nonstoppod
+   68  vi karam.yml
+   69  kubectl create -f karam.yml
+   70  kubectl get pods
+   71  watch kubectl get pods alpine
+   72  cat karam.yml
+   73  kubectl delete pod alpine
+   74  vi karam.yml
+   75  kubectl create -f karam.yml
+   76  watch kubectl get pods alpine
+   77  cat karam.yml
+   78  watch kubectl get pods alpine
+   79  kubectl top pods
+   80  kubectl top ?
+   81  kubectl top
+   82  kubectl top pods -n defaults
+   83  kubectl top node
+   84  kubectl top pod --namespace=kube-system
+   85  kubectl top pod -A
+   86  kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+   87  kubectl top pod --namespace=kube-system
+   88  kubectl top pod -A
+   89  kubectl edit deployments.apps -n kube-system
+   90  kubectl edit deployments.apps -n kube-system metrics-server
+   91  kubectl top pod --namespace=kube-system
+   92  ls
+   93  ubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml.
+   94  ubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+   95  kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+   96  kubectl get pods
+   97  kubectl top pods -A
+   98   kubectl get --raw "/apis/metrics.k8s.io/v1beta1/nodes"
+   99  clear
+  100  kubectl get pods
+  101  kubectl get pods myapp
+  102  kubectl logs pod myapp
+  103  kubectl logs myapp
+  104  kubectl logs myapp >> /tmp/2log file
+  105  kubectl logs myapp >> /tmp/2log
+  106  cat /tmp/2log
+  107  kubectl describe pod mydb
+  108  kubectl get events --field-selector type=Events
+  109  kubectl get events
+  110  kubectl describe pod mydb | grep Events:
+  111  kubectl describe pod mydb | grep Events: > /tmp/dbevents
+  112  cat /tmp/dbevents
+  113  clear
+  114  kubectl version
+  115  kubectl cluster version
+  116  clear
+  117  kubectl cluster-info
+  118  kubectl version
+  119  kubectl version > /tmp/clusterversion.txt
+  120  cat /tmp/clusterversion.txt
+  121  kubectl get nodes --show-labels
+  122  kubectl get all --show-labels
+  123  clear
+  124  kubectl get nodes --show-labels
+  125  kubectl get nodes --show-labels >> /tmp/controlplane-label.txt
+  126  cat /tmp/controlplane-label.txt
+  127  kubectl get nodes --show-labels
+  128  kubectl get pods -n kube-system
+  129  kubectl get pods -n defaults
+  130  kubectl get pods -n all
+  131  kubectl get pods -A
+  132  kubectl get pods
+  133  export KUBECONFIG=/etc/kubernetes/admin.conf
+  134  kubectl get pods
+  135  kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+  136  kubectl top nodes
+  137  kubectl get apiservices | grep metrics
+  138  kubectl edit deployments.apps -n kube-system metrics-server
+  139  kubectl get apiservices | grep metrics
+  140  kubectl edit deployments.apps -n kube-system metrics-server
+  141  kubectl top nodes
+  142  kubectl get pods
+  143  export KUBECONFIG=/etc/kubernetes/admin.conf
+  144  kubectl get pods
+  145  kubectl top nodes
+  146  kubectl get po -A
+  147  kubectl delete pod  metrics-server-5c758f76fd-vfwq4
+  148  kubectl get po -A
+  149  kubectl get apiservices | grep metrics
+  150  git clone https://github.com/kubernetes-incubator/metrics-server.git
+  151  ls
+  152  cd metrics-server/
+  153  ls
+  154  cd ..
+  155  cd metrics-server/
+  156  ls
+  157  cat README.md
+  158  docker run --rm k8s.gcr.io/metrics-server/metrics-server:v0.5.0 --help
+  159  kubectl get apiservices | grep metrics
+  160  kubectl get nodes -o wide
+  161  kubectl get apiservices | grep metrics
+  162  kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+  163  history
+  164  exit
+  165  kubectl get apiservices | grep metrics
+  166   export KUBECONFIG=/etc/kubernetes/admin.conf
+  167  kubectl get pods -A
+  168  kubectl edit deployments.apps -n kube-system metrics-server
+  169  kubectl get pods -A
+  170  kubectl get pods -A w
+  171  kubectl get pods -A
+  172  kubectl get pods -A
+  173  kubectl describe pod -n kube-system metrics-server-5f747f4748-5m6hv
+  174  k -n pods -A
+  175  kubectl get nodes
+  176  kubectl get pods
+  177  kubectl top pods
+  178  clear
+  179  kubectl top nodes
+  180  kubectl get pods -A
+  181  kubectl get nodes -0 wide
+  182  kubectl get nodes -O wide
+  183  kubectl get nodes -o wide
+  184  clear
+  185  kubectl get pods
+  186  kubectl get pods -A
+  187  kubectl get nodes
+  188  kubectl get nodes
+  189  kubectl describe nodes worker1
+  190  kubectl describe nodes worker~
+  191  kubectl describe nodes worker~
+  192  kubectl describe nodes worker3
+  193  clear
+  194  kubectl get nodes
+  195  kubectl get pods -A
+  196  kubectl top nodes
+  197  kubectl top pods
+  198  kubectl top pods
+  199  ls
+  200  kubectl apply -f nginx.yml
+  201  kubectl apply -f mysql.yml
+  202  clear
+  203  kubectl top nodes
+  204  kubectl top pods -A
+
+
+
+

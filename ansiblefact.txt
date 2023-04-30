@@ -1,0 +1,226 @@
+[root@ip-172-31-49-92 ansible]# cat va
+cat: va: No such file or directory
+[root@ip-172-31-49-92 ansible]# cat vault.yml
+$ANSIBLE_VAULT;1.1;AES256
+34396231636363373030383534313865323162613739353931393330666434323834356631663137
+6664643236636534653533353938356237303033306261350a396230303866623335636564303265
+63376262623734653034653862393065383439653564353639353639336664316332666162656461
+3664386466333964330a393864663235373364353666366532656531353461653436303635653230
+3730
+[root@ip-172-31-49-92 ansible]# ansible-vault view vault.yml
+Vault password:
+user_1: tinkil
+[root@ip-172-31-49-92 ansible]# vi user.yml
+[root@ip-172-31-49-92 ansible]# ansible-playbook --syntax-check user.yml
+ERROR! Attempting to decrypt but no vault secrets found
+[root@ip-172-31-49-92 ansible]# ansible-playbook --syntax-check user.yml --ask-vault-pass
+Vault password:
+
+playbook: user.yml
+[root@ip-172-31-49-92 ansible]# ansible-playbook user.yml --ask-vault-pass
+Vault password:
+
+PLAY [creating playbook for variables] *************************************************************************************************************************
+
+TASK [Gathering Facts] *****************************************************************************************************************************************
+ok: [node1]
+ok: [node2]
+
+TASK [user] ****************************************************************************************************************************************************
+changed: [node2]
+changed: [node1]
+
+PLAY RECAP *****************************************************************************************************************************************************
+node1                      : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+node2                      : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+[root@ip-172-31-49-92 ansible]# vi pass.txt
+[root@ip-172-31-49-92 ansible]# vi user.yml
+[root@ip-172-31-49-92 ansible]# ansible-vault create vault.yml --vault-password-file=pass.txt
+ERROR! vault.yml exists, please use 'edit' instead
+[root@ip-172-31-49-92 ansible]# rm -rf vault.yml
+[root@ip-172-31-49-92 ansible]# ansible-vault create vault.yml --vault-password-file=pass.txt
+[root@ip-172-31-49-92 ansible]#
+[root@ip-172-31-49-92 ansible]# ansible-playbook --syntax-check vault.yml --vault-password-file=pass.txt
+ERROR! A playbook must be a list of plays, got a <class 'ansible.parsing.yaml.objects.AnsibleMapping'> instead
+
+The error appears to be in '/root/ansible/vault.yml': line 1, column 1, but may
+be elsewhere in the file depending on the exact syntax problem.
+
+The offending line appears to be:
+
+
+$ANSIBLE_VAULT;1.1;AES256
+^ here
+[root@ip-172-31-49-92 ansible]# cat vault.yml
+$ANSIBLE_VAULT;1.1;AES256
+33616665303261383861636134366265303139636638376565383931393566306432643838313732
+3935396262356233663936623765323732356664656539320a303437336432613539613035626565
+30303335656539376332333534303335663335373465313839323339356233393763353764353461
+3736653731383962620a613864313062366662356137313937383866616139373537373831616664
+3463
+[root@ip-172-31-49-92 ansible]# vi user.yml
+[root@ip-172-31-49-92 ansible]# ansible-playbook --syntax-check user.yml --vault-password-file=pass.txt
+
+playbook: user.yml
+[root@ip-172-31-49-92 ansible]# ansible-playbook user.yml --vault-password-file=pass.txt
+
+PLAY [creating playbook for variables] *************************************************************************************************************************
+
+TASK [Gathering Facts] *****************************************************************************************************************************************
+ok: [node2]
+ok: [node1]
+
+TASK [user] ****************************************************************************************************************************************************
+changed: [node1]
+changed: [node2]
+
+PLAY RECAP *****************************************************************************************************************************************************
+node1                      : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+node2                      : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+[root@ip-172-31-49-92 ansible]# ansible all -m command -a " id rinku "
+node2 | CHANGED | rc=0 >>
+uid=1003(rinku) gid=1003(rinku) groups=1003(rinku)
+node1 | CHANGED | rc=0 >>
+uid=1003(rinku) gid=1003(rinku) groups=1003(rinku)
+[root@ip-172-31-49-92 ansible]# nsible all -m setup -a "filter=ansible_cmdline"
+bash: nsible: command not found
+[root@ip-172-31-49-92 ansible]#
+[root@ip-172-31-49-92 ansible]# ansible all -m setup -a "filter=ansible_cmdline"
+node2 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_cmdline": {
+            "BOOT_IMAGE": "(hd0,gpt3)/vmlinuz-5.14.0-162.6.1.el9_1.x86_64",
+            "console": "tty0",
+            "crashkernel": "1G-4G:192M,4G-64G:256M,64G-:512M",
+            "net.ifnames": "0",
+            "nvme_core.io_timeout": "4294967295",
+            "rd.blacklist": "nouveau",
+            "root": "UUID=69954eca-aa7b-416a-8db0-85e6d54ebfb7"
+        },
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false
+}
+node1 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_cmdline": {
+            "BOOT_IMAGE": "(hd0,gpt3)/vmlinuz-5.14.0-162.6.1.el9_1.x86_64",
+            "console": "tty0",
+            "crashkernel": "1G-4G:192M,4G-64G:256M,64G-:512M",
+            "net.ifnames": "0",
+            "nvme_core.io_timeout": "4294967295",
+            "rd.blacklist": "nouveau",
+            "root": "UUID=69954eca-aa7b-416a-8db0-85e6d54ebfb7"
+        },
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false
+}
+[root@ip-172-31-49-92 ansible]# vi facts.yml
+[root@ip-172-31-49-92 ansible]# ansible-playbook --syntax-check facts.yml
+
+playbook: facts.yml
+[root@ip-172-31-49-92 ansible]# ansible-playbook facts.yml
+
+PLAY [using_facts] *********************************************************************************************************************************************
+
+TASK [Gathering Facts] *****************************************************************************************************************************************
+ok: [node2]
+ok: [node1]
+
+TASK [debug] ***************************************************************************************************************************************************
+ok: [node1] => {
+    "ansible_facts[\"cmdline\"]": {
+        "BOOT_IMAGE": "(hd0,gpt3)/vmlinuz-5.14.0-162.6.1.el9_1.x86_64",
+        "console": "tty0",
+        "crashkernel": "1G-4G:192M,4G-64G:256M,64G-:512M",
+        "net.ifnames": "0",
+        "nvme_core.io_timeout": "4294967295",
+        "rd.blacklist": "nouveau",
+        "root": "UUID=69954eca-aa7b-416a-8db0-85e6d54ebfb7"
+    }
+}
+ok: [node2] => {
+    "ansible_facts[\"cmdline\"]": {
+        "BOOT_IMAGE": "(hd0,gpt3)/vmlinuz-5.14.0-162.6.1.el9_1.x86_64",
+        "console": "tty0",
+        "crashkernel": "1G-4G:192M,4G-64G:256M,64G-:512M",
+        "net.ifnames": "0",
+        "nvme_core.io_timeout": "4294967295",
+        "rd.blacklist": "nouveau",
+        "root": "UUID=69954eca-aa7b-416a-8db0-85e6d54ebfb7"
+    }
+}
+
+PLAY RECAP *****************************************************************************************************************************************************
+node1                      : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+node2                      : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+[root@ip-172-31-49-92 ansible]# vi fact2.yml
+[root@ip-172-31-49-92 ansible]# cat fact.
+cat: fact.: No such file or directory
+[root@ip-172-31-49-92 ansible]# cat facts.yml
+---
+      - name: using_facts
+        hosts: all
+        tasks:
+                  - debug:
+                       var:  ansible_facts["cmdline"]
+[root@ip-172-31-49-92 ansible]# ^C
+[root@ip-172-31-49-92 ansible]# vi fact2.yml
+[root@ip-172-31-49-92 ansible]# ansible-playbook --syntax-check fact2.yml
+ERROR! We were unable to read either as JSON nor YAML, these are the errors we got from each:
+JSON: Expecting value: line 1 column 3 (char 2)
+
+Syntax Error while loading YAML.
+  mapping values are not allowed in this context
+
+The error appears to be in '/root/ansible/fact2.yml': line 2, column 13, but may
+be elsewhere in the file depending on the exact syntax problem.
+
+The offending line appears to be:
+
+  ---
+      - name: using_facts
+            ^ here
+[root@ip-172-31-49-92 ansible]# vi fact2.yml
+[root@ip-172-31-49-92 ansible]# ansible-playbook --syntax-check fact2.yml
+
+playbook: fact2.yml
+[root@ip-172-31-49-92 ansible]# vi fact2.yml
+[root@ip-172-31-49-92 ansible]# ansible-playbook --syntax-check fact2.yml
+
+playbook: fact2.yml
+[root@ip-172-31-49-92 ansible]# ansible-playbook fact2.yml
+
+PLAY [using_facts] *********************************************************************************************************************************************
+
+TASK [Gathering Facts] *****************************************************************************************************************************************
+ok: [node2]
+ok: [node1]
+
+TASK [debug] ***************************************************************************************************************************************************
+ok: [node1] => {
+    "ansible_facts[\"memory_mb\"]|type_debug": "dict"
+}
+ok: [node2] => {
+    "ansible_facts[\"memory_mb\"]|type_debug": "dict"
+}
+
+TASK [debug] ***************************************************************************************************************************************************
+ok: [node1] => {
+    "ansible_facts[\"machine\"]|type_debug": "AnsibleUnsafeText"
+}
+ok: [node2] => {
+    "ansible_facts[\"machine\"]|type_debug": "AnsibleUnsafeText"
+}
+
+PLAY RECAP *****************************************************************************************************************************************************
+node1                      : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+node2                      : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+[root@ip-172-31-49-92 ansible]# cat fact2.yml
+---
+      - name: using_facts

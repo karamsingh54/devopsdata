@@ -1,0 +1,621 @@
+[defaults]
+inventory = ./inventory
+remote_user = ubuntu
+ask_pass = false
+host_key_checking = false
+private_key_file = ./tink.pem
+
+
+[privilege_escalation]
+become = true
+become_user = root
+become_method = sudo
+become_ask_pass = false
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm -y
+
+
+# for epel repository
+
+
+
+
+
+[dev]
+172.31.88.156
+
+172.31.83.101
+
+
+
+
+---
+   - name: 
+
+ansibible -ga;;axy init users
+
+
+
+cd tasks
+
+- name : creatig usr
+  user:  
+     name: "{{ user_1 }}
+     state: present
+ - mname: cr gro
+    name: "{{ group_1 }}
+     state: present
+
+
+
+
+cd defaults
+  user_1: a1
+  group_1: a2
+
+
+myuser.yml
+
+---
+   - hosts: all
+      roles:    
+              - users
+    
+
+
+
+
+
+vi myuser.yml
+---
+   - hosts: all
+      vars:    
+              - user_1: b1
+                user_2: b2
+
+
+
+cd vars
+
+ user_1: c1
+
+
+
+
+
+vim meta
+
+
+
+
+taks 
+
+
+- yum:
+      name:  variable define
+      state:
+- service:
+       name
+       state
+       enabled
+
+- template :
+    src:
+    dest
+    notify: restarted apache
+
+
+
+cd handl
+   - name: restarted apchae
+     service: 
+         name :
+         state: 
+
+
+
+
+
+cd temlate
+
+vi index.html.j2
+   this is my personal machine's ip {{ ansible_facts.default_ipv4.address }}
+ 
+
+
+
+
+vim myweb.yml
+
+  - name : using wbe rol
+    hosts: all
+    roles:   
+
+          - webserver
+
+
+
+
+
+ansiblle-galaxy install
+   
+    
+
+  ---
+      - name: using_facts
+         hosts: all
+         tasks: 
+                  - debug:
+                        msg: "{{ ansible_facts_distribution }}"
+
+
+
+---
+     - name: creating playbook for variables
+       hosts: all
+       vars_file: 
+                  - vault.yml
+
+
+       tasks:
+                   - user:
+                            name: "{{ user_1 }}"
+                            state: present
+                    
+
+
+
+
+
+- hosts: all
+      tasks:
+      - debug:
+          var: ansible_facts["cmdline"]
+Image
+
+
+
+---
+      - name: using handlers
+         hosts: dev
+         tasks: 
+                  - yum:
+                        name: httpd
+                        state: present
+                  - lineinfile:
+                         path: /var/www/html/index.html
+                         line: " practical done by me
+                         create: yes
+       - handlers:
+                   - name: restarted httpd
+                      services: 
+                           name: httpd
+                           state: restarted
+
+
+
+---
+      - name: conf custom webserver
+        hosts: all
+        tasks:
+                  - yum:
+                        name: httpd
+                        state: present
+                  - lineinfile:
+                        path: /var/www/html/index.html
+                        line: "{{ ansible_facts.fqdn }}
+                        create: yes
+                  - template:
+                        src: xyz.conf.j2
+                        dest: /etc/httpd/conf.d/xyz.conf
+                  - service:
+                        name: httpd
+                        state: restarted
+                        enabled: yes
+
+
+
+---
+      - name: conf dns enrty
+        hosts: all
+        tasks:
+                  - yum:
+                        name: bind
+                        state: present
+                 - template:
+                        src: named.conf.j2
+                        dest: /etc/named.conf
+                  - template:
+                        src: zone.j2
+                        dest: /var/named/zone
+                  - service:
+                        name: named
+                        state: restarted
+                        enabled: yes
+
+
+
+
+- hosts: all
+      tasks:
+      - debug:
+          var: ansible_facts[''all_ipv4_addresses"]
+      - debug:
+          var: ansible_facts["date_time.day"]
+      - debug:
+          var: ansible_facts[''deafult_ipve.gateway'']
+      - debug:
+          var: ansible_facts[""]
+
+      - debug:
+          var: ansible_facts
+
+
+
+
+
+---
+      - name: using loop
+         hosts: all
+         tasks: 
+                  - user: "{{ items }}"
+                     state: present
+                loop:
+                      -   abc1
+                      -   abc2
+                      -   abc3                        
+
+
+
+---
+      - name: using loop
+         hosts: all
+         vars:
+                    - user_name: 
+                                - a1 
+
+          tasks:
+                  - user: "{{ items }}"
+                     state: present
+                loop:
+
+
+---
+      - name: using loop
+         hosts: all
+         vars:
+                   variable.yml
+
+          tasks:
+                  - user: "{{ items }}"
+                     state: present
+                loop:
+
+
+
+
+variable.yml
+
+     user_name:  
+                 - a1
+                 - a2
+
+
+---
+      - name: using conditions
+         hosts: all
+         tasks:
+                  - file:
+                       path: /root/file1
+                       state
+                   when: ansibile_facts_distribution == "Redhat" and ansibile_facts_distribution_version == "8.7"
+
+
+
+---
+      - name: using conditions
+         hosts: all
+         tasks:
+                  - file:
+                       path: /tppt/file1
+                       state
+                   when: ansibile_facts_distribution == "Ubuntu"  
+
+
+---
+      - name: using conditions
+         hosts: all
+         tasks:
+                  - yum:
+                       name: "{{ my_pkg }}"
+                       state: present
+                   when: my_pkg is defined 
+
+
+
+is not def  
+
+
+
+
+
+
+---
+      - name: using file copy
+         hosts: all
+         tasks:
+                  - copy:
+                       src:pqr.j2
+                       dest: /pqr.j2
+
+
+--
+      - name: conf custom webserver
+         hosts: all
+         tasks:
+                  - yum:
+                       name:httpd
+                       state: present
+                  - lineinfile:
+                        path: /var/www/html/index.html
+                        line: "{{ ansible_facts.fqdn }}
+                        create: yes
+                    - template: 
+                         src: xyz.conf.j2
+                         dest: /etc/httpd/conf.d/xyz.conf
+                     - service:
+                          name: httpd
+                          state: restarted
+                          enabled: yes
+
+
+
+
+<virtualhost *:{{ wbe_port }}>
+servername  {{ web_name }}
+documentroot /var/www/html
+</virtualhost>
+
+
+
+
+
+
+vim group
+
+dev 
+web_port: 8080
+web_name: node1
+
+
+test
+web_port: 8888
+web_name: node2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+debug selinux
+
+yum intsall rhel-system-roles -y
+
+
+
+cd /usr/share/ansible/roles
+ls
+slinux role
+
+ls
+
+vim READ.md
+
+--- yml
+
+vars:
+    - selinux_state: enforcing
+roles: 
+  - role: rhel-system-roles-selinux
+
+
+
+
+vim selinux.yml
+
+
+  ---
+    - name: debug 
+      hosts: all
+      vars: 
+            - selinux_state: enforcing
+   roles: 
+           - role: rhel-system-roles-selinux
+              become: true
+
+
+
+getenforce
+
+set
+
+
+
+
+
+
+
+
+cd /usr/share/ansible/roles
+
+
+cd rhel-timesynce/
+
+vim REAd
+
+
+copy yaml
+
+vim timesynce
+ paste file
+
+
+---
+  - name: configuring ntp server
+     hosts: localhosts
+     vars:
+        timesync_ntp_servers:
+         
+
+
+
+---
+  - name: using some options
+    hosts:
+    tasks:
+          - group:
+                 name: laptop
+                  state
+          -yum:
+              name: idreas
+              state; present
+            ignore_errors: yes
+           - user:
+               name: mobile
+               groups: laptop
+               uid: '3000'
+               state: present
+
+
+
+---
+  - name: using some options
+    hosts: all
+    gather_facts: no
+    tasks:
+          - group:
+                 name: laptop
+                  state
+          -yum:
+              name: git
+              state; present
+            
+           - user:
+               name: mobile
+               groups: laptop
+               uid: '3000'
+               state: present
+
+
+
+
+
+handler yml
+
+  force_handlers: yes
+
+
+
+above lineinline
+
+       - yum: 
+            name: karam
+            state: present
+
+
+
+
+
+vi yum.yml
+
+ --- 
+
+- name: yum configuration
+  hosts: all
+  tasks: 
+        - yum_repository:
+                     name: "AppStream"
+                     baseurl: http://classroom.example.com/AppStream
+                     gpgcheck: 0
+                     enabled: 1
+                     file: yum.txt
+                     description: " this is test repo "
+                     
+
+
+            - yum_repository:
+                     name: "BaseOS"
+                     baseurl: http://classroom.example.com/BaseOS
+                     gpgcheck: 0
+                     enabled: 1
+                     file: yum.txt
+                     description: " this is test repo "
+
+
+
+
+
+---
+  - name: using some options
+    hosts: localhost
+ 
+    tasks:
+           - user:
+               name: mobile
+               
+               uid: '3000'
+               state: present
+
+           - lineinfile:
+                 dest: "/etc/sudoers"
+                 state: present
+                 regexp: "mobile"
+                 line: "mobile ALL=(ALL) NOPASSWD: ALL"
+
+
+
+
+
+  
+
+
+
+
+     
+           
+
+
+
+
+
+

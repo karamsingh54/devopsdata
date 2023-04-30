@@ -1,0 +1,254 @@
+java -jar jenkins-cli.jar -s http://3.218.252.166:8080
+
+1149876a2373f9d96bc105ac1b5a0be4e9
+
+
+
+PROJECT:
+
+JENKINS
+master slave conf
+
+from git repo (devops-project )
+
+2 dev  
+
+webhook configure
+
+
+one ansible control node server   /ansible/Dockerfile
+
+image build with tagging of my reomte docker hub re[o
+upload image on Docker hub accoint
+remove all docker image 
+from local machine
+playbook launch container on docker host via using image 
+on docker host container run
+
+
+
+
+
+
+jenkins pipeline 
+
+new item 
+
+final-project 
+
+git repo link pic up the docker file
+
+
+
+
+cd /var/libe/jenkins/workspace
+
+
+
+
+"mkdir /var/www/html/secure
+
+
+
+
+
+manage jenkins
+
+conf ansible machine
+
+in publish ssh
+
+install ansible 
+
+install docjer on docker machine
+
+docker on centos 8
+
+
+rsync -e ssh /var/lib/jenkins/workspace/devops-final-project root@  :/mnt
+
+
+
+
+
+docker build -t Final-project:v1 .
+
+
+
+on docker server
+
+
+
+docker image tag 
+
+
+
+
+docker image tag devops-finalproject:v1 karamsiungh54/devops-final-project:latest
+
+
+
+
+
+
+
+
+in ansible 
+
+
+
+
+exec
+
+
+
+
+cd /mnt
+docker build -t devops-projectv1 .
+docker image tag devops-projectv1 karamsingh/devops-project:v1
+docker image tag devops-projectv1 karamsingh/devops-project:latest
+
+
+
+jenkin env varIBLE 
+
+cd /mnt
+docker build -t $JOB_NAME:v$BUILD_ID .
+docker image tag $JOB_NAME:v$BUILD_ID karamsingh54/$JOB_NAME:v$BUILD_ID
+docker image tag $JOB_NAME:v$BUILD_ID karamsingh54/$JOB_NAME:v$BUILD_ID:latest
+docker image push karamsingh54/JOB_NAME:v$BUILD_ID
+docker image push karamsingh54/JOB_NAME:v$BUILD_ID:latest
+docker rmi -f $(docker images -q -a)
+
+
+
+
+
+
+
+FROM centos:latest
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+RUN yum install zip httpd unzip -y
+ADD https://www.free-css.com/assets/files/free-css-templates/download/page288/fiu.zip  /var/www/html
+WORKDIR /var/www/html
+RUN unzip fiu.zip
+RUN rm -rf fiu.zip &&\
+      cp -rf html/* . &&\
+      rm -rf html
+EXPOSE 80
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+
+
+
+
+FROM centos:latest
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+RUN yum install zip httpd unzip -y
+ADD https://www.free-css.com/assets/files/free-css-templates/download/page288/digitalex.zip /var/www/html
+WORKDIR /var/www/html
+RUN unzip digitalex.zip
+RUN rm -rf digitalex.zip &&\
+      cp -rf digitalex-html/* . &&\
+      rm -rf digitalex-html
+EXPOSE 80
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+
+
+
+https://www.free-css.com/assets/files/free-css-templates/download/page288/foste.zip
+
+
+
+
+FROM centos:latest
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+RUN yum install zip httpd unzip -y
+ADD https://www.free-css.com/assets/files/free-css-templates/download/page288/foste.zip /var/www/html
+WORKDIR /var/www/html
+RUN unzip foste.zip
+RUN rm -rf foste.zip &&\
+      cp -rf html/* . &&\
+      rm -rf html
+EXPOSE 80
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+
+
+
+
+
+
+
+
+
+cd /ram 
+docker build -t ram1 .
+docker image tag ram1:latest karamsingh54/ram1:latest
+docker image push karamsingh54/ram1:latest
+docker rmi -f $(docker images -q -a)
+
+
+
+
+cd /job
+docker build -t $JOB_NAME:$BUILD_ID .
+
+
+docker image tag $JOB_NAME:vBUILD_ID karamsingh54/$JOB_NAME:v$BUILD_ID
+
+
+
+
+
+
+rsync -e ssh /var/lib/jenkins/workspace/fin/Dockerfile root@34.232.78.254:/tinku
+
+cd /home/finalproject2
+docker build -t $JOB_NAME:v$BUILD_ID .
+docker image tag $JOB_NAME:vBUILD_ID karamsingh54/$JOB_NAME:v$BUILD_ID
+docker image tag $JOB_NAME:vBUILD_ID karamsingh54/$JOB_NAME:latest
+docker image push karamsingh54/$JOB_NAME:v$BUILD_ID
+docker image push karamsingh54/$JOB_NAME:latest
+docker rmi -f $(docker image -q -a)
+
+
+
+
+
+
+
+
+
+
+cd /home/devops
+docker build -t $JOB_NAME:v$BUILD_ID .
+docker image tag $JOB_NAME:v$BUILD_ID karamsingh54/$JOB_NAME:v$BUILD_ID
+docker image tag $JOB_NAME:v$BUILD_ID karamsingh54/$JOB_NAME:latest
+docker image push karamsingh54/$JOB_NAME:v$BUILD_ID
+docker image push karamsingh54/$JOB_NAME:latest
+docker image rmi $JOB_NAME:v$BUILD_ID karamsingh54/$JOB_NAME:v$BUILD_ID karamsingh54/$JOB_NAME:latest
+
+
+- hosts: all
+   tasks:
+       - name: stop container
+          shell: docker container stop dockerjob
+       - name: remove container
+          shell: docker container rm dockerjob
+        - name: remove docker image
+          shell: docker image rm -f  karamsingh54/devops-final-project
+       - name: create new container
+         shell: docker run -itd --name dockerjob -p 80:80 karamsingh54/devops-final-project
+
+
+
+cd /tinku
+docker build -t $JOB_NAME:v$BUILD_ID .
+docker image tag $JOB_NAME:v$BUILD_ID karamsingh54/$JOB_NAME:v$BUILD_ID
+docker image tag $JOB_NAME:v$BUILD_ID karamsingh54/$JOB_NAME:latest
+docker image push karamsingh54/$JOB_NAME:v$BUILD_ID
+docker image push karamsingh54/$JOB_NAME:latest
+docker image rmi $JOB_NAME:v$BUILD_ID karamsingh54/$JOB_NAME:v$BUILD_ID karamsingh54/$JOB_NAME:latest
+

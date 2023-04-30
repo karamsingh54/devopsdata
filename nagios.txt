@@ -1,0 +1,116 @@
+  yum install -y gcc glibc glibc-common gd gd-devel make net-snmp openssl-devel tar wget
+  425  useradd nagios
+  426  passwd nagios
+  427  mkdir /root/nagios
+  428   cd /root/nagios
+  429  wget https://nagios-plugins.org/download/nagios-plugins-2.3.3.tar.gz
+  430  tar -xvf nagios-plugins-2.3.3.tar.gz
+  431  cd nagios-plugins-2.3.3
+  432  ./configure
+  433  make
+  434  make install
+  435  chown nagios.nagios /usr/local/nagios
+  436  chown -R nagios.nagios /usr/local/nagios/libexec
+  437  cd /root/nagios
+  438   wget https://github.com/NagiosEnterprises/nrpe/releases/download/nrpe-4.0.2/nrpe-4.0.2.tar.gz
+  439  tar xzf nrpe-4.0.2.tar.gz
+  440  cd nrpe-4.0.2
+  441  ./configure
+  442   make all
+  443  ./configure --disable-ssl
+  444   make all
+  445   make install-plugin
+  446   make install-daemon
+  447  make install-config
+  448  make install-init
+  449  /usr/local/nagios/etc/nrpe.cfg
+  450  vi /usr/local/nagios/etc/nrpe.cfg
+  451   systemctl enable nrpe
+  452   systemctl restart nrpe
+  453  netstat -at | grep nrpe
+  454  /usr/local/nagios/libexec/check_nrpe -H 127.0.0.1
+  455  history
+
+
+
+nslookup karamsingh.tech
+  243  dig karamsingh.tech
+  244  yum install -y httpd httpd-tools php gcc glibc glibc-common gd gd-devel make net-snmp
+  245  yum install openssl-devel -y
+  246  useradd nagios
+  247   groupadd nagcmd
+  248  usermod -G nagcmd nagios
+  249  usermod -G nagcmd apache
+  250  mkdir /root/nagios
+  251  cd /root/nagios
+  252  wget https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.4.9.tar.gz
+  253  wget https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.4.9.tar.gz
+  254   tar -xf nagios-4.4.9.tar.gz
+  255  tar -xf nagios-plugins-2.3.3.tar.gz
+  256   wget https://nagios-plugins.org/download/nagios-plugins-2.3.3.tar.gz
+  257   wget https://nagios-plugins.org/download/nagios-plugins-2.3.3.tar.gz
+  258  ls
+  259  ls -l
+  260  rm -rf nagios-4.4.9.tar.gz.1
+  261  rm -rf nagios-plugins-2.3.3.tar.gz.1
+  262  ls
+  263   tar -xf nagios-plugins-2.3.3.tar.gz
+  264  cd nagios-4.4.9/
+  265   ./configure --with-command-group=nagcmd
+  266  yum install unzip -y
+  267   ./configure --with-command-group=nagcmd
+  268  make all
+  269  make install
+  270   make install-init
+  271  make install-commandmode
+  272  make install-config
+  273   vi /usr/local/nagios/etc/objects/contacts.cfg
+  274  make install-webconf
+  275  htpasswd -s -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+  276  systemctl restart httpd
+  277  cd /root/nagios
+  278  cd nagios-plugins-2.3.3
+  279  ./configure --with-nagios-user=nagios --with-nagios-group=nagios
+  280  make
+  281  make install
+  282   /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+  283  systemctl enable nagios
+  284  systemctl enable httpd
+  285  systemctl restart nagios
+  286  firewall-cmd --permanent --zone=public --add-service=http
+  287  geten
+  288  getenforce
+  289  timedatectl set time-zone Asia/kolkata
+  290  timedatectl man
+  291  man timeda
+  292  man timedatectl
+  293  timedatectl set-timezone Asia/kolkata
+  294  timedatectl set-timezone Asia/Kolkata
+  295  date
+  296  timedatectl
+  297  cd /root/nagios
+  298  ls
+  299   wget https://github.com/NagiosEnterprises/nrpe/releases/download/nrpe-4.0.2/nrpe-4.0.2.tar.gz
+  300  tar xzf nrpe-4.0.2.tar.gz
+  301  cd nrpe-4.0.2
+  302  ./configure
+  303  make all
+  304  ./configure --disable-ssl
+  305  make all
+  306   make install-plugin
+  307  make install-daemon
+  308  make install-init
+  309  /usr/local/nagios/libexec/check_nrpe -H 172.31.59.64
+  310  cd /usr/local/nagios/etc/
+  311  touch hosts.cfg
+  312  touch services.cfg
+  313  vi /usr/local/nagios/etc/nagios.cfg
+  314  vi /usr/local/nagios/etc/hosts.cfg
+  315  vi /usr/local/nagios/etc/hosts.cfg
+  316  hostnamectl set hostname nagios
+  317  hostnamectl set-hostname nagios
+  318  vi /usr/local/nagios/etc/services.cfg
+  319  cat /usr/local/nagios/etc/services.cfg
+  320  vi /usr/local/nagios/etc/objects/commands.cfg
+  321  /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+  322  systemctl restart nagios

@@ -1,0 +1,42 @@
+find ./GFG -name sample.txt 
+find ./GFG -name *.txt 
+find ./GFG -name sample.txt -exec rm -i {} \;
+ find ./GFG -empty
+ find ./GFG -perm 664
+find ./ -type f -name "*.txt" -exec grep 'Geek'  {} \;
+
+
+find . -name tecmint.txt
+find /home -name tecmint.txt
+
+find /home -iname tecmint.txt
+find / -type d -name Tecmint
+find . -type f -name tecmint.php
+
+ find . -type f -name "*.php"
+find . -type f -perm 0777 -print
+
+find / -type f ! -perm 777
+
+ find / -perm 2644
+ find / -perm 1551
+
+
+ find / -perm /u=r   find only read only files
+find / -type f -perm 0777 -print -exec chmod 644 {} \;
+
+find . -type f -name "tecmint.txt" -exec rm -f {} \;
+find . -type f -name "*.txt" -exec rm -f {} \;
+ find /tmp -type d -empty
+find /tmp -type f -name ".*"
+
+find /home -user tecmint
+find /home -group developer
+
+find / -mtime 50
+
+ find / -mtime +50 –mtime -100
+
+ find / -size +50M -size -100M
+
+ find / -type f -name *.mp3 -size +10M -exec rm {} \;

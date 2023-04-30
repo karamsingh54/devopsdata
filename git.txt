@@ -1,0 +1,73 @@
+git add .
+git commit 2 alg
+
+vim secret 
+
+
+vim .gitignore
+
+secret 
+
+git add .
+
+git commit
+
+vim 123
+
+
+git add .
+
+git commit
+
+git status 
+
+
+
+
+
+
+new repo karam
+
+
+
+git add ,
+git commit -m final update "
+
+git remote add Mydara htt
+
+git push Mydata master
+
+
+
+
+git hooks
+
+
+three commit 
+
+
+git reset --had 2nd commit
+
+
+
+git push TOY master
+
+error
+
+
+
+you can pull repo first
+
+git pus TOY master
+
+\\.git/config
+
+
+
+
+git server conf
+
+
+
+
+chown root 

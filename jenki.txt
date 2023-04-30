@@ -1,0 +1,126 @@
+ssh-copy-id -p 225 root@ip
+
+
+scp -r -P 225 /etc root@ip
+
+
+
+
+configure dydtem 
+
+
+end
+
+
+ssh serv
+
+jenkins
+
+
+root 
+
+ip 
+
+
+
+use passwrd
+
+
+port 22
+
+
+
+
+
+second 
+
+name 
+ip add
+
+
+
+
+
+
+project fee
+
+
+build trigger
+
+github hook for polling
+
+
+
+git 
+
+
+repo :
+
+
+
+
+
+addurl/github-webhook
+
+
+cd /var/lib/workspace/first
+
+
+
+
+
+
+
+
+
+send file over ss
+
+
+
+rsync -e "ssh -p 22" /var/lib/jenkins/work/pipl/" root@ip:/var/www/html
+
+
+
+
+
+
+work
+
+
+
+
++refs/heads/*:refs/remotes/origin/*
+
+
+
+
+
+
+
+manage user
+
+
+
+
+manage jenkins
+
+
+configure secuirty options
+
+authorization
+
+logged in user can do anything 
+anyone can do anything
+
+
+RBAC
+
+
+
+
+
+
+
+
+
+

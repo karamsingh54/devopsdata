@@ -1,0 +1,154 @@
+to set up master node by kubeadm 
+
+on master node run :
+
+
+
+   1  curl -fsSL https://get.docker.com -o get-docker.sh
+    2  sudo sh ./get-docker.sh --dry-runcurl -fsSL https://get.docker.com -o get-docker.sh
+    3  docker --version
+    4  vi /etc/docker/daemon.json
+    5  systemctl restart docker
+    6  cat /etc/docker/daemon.json
+    7  vi /etc/docker/daemon.json
+    8  systemctl restart docker
+    9  git clone https://github.com/Mirantis/cri-dockerd.git
+   10  # Run these commands as root
+   11  ###Install GO###
+   12  wget https://storage.googleapis.com/golang/getgo/installer_linux
+   13  chmod +x ./installer_linux
+   14  ./installer_linux
+   15  source ~/.bash_profile
+   16  cd cri-dockerd
+   17  mkdir bin
+   18  go build -o bin/cri-dockerd
+   19  systemctl status cri-docker.socket
+   20  # Run these commands as root
+   21  ###Install GO###
+   22  wget https://storage.googleapis.com/golang/getgo/installer_linux
+   23  chmod +x ./installer_linux
+   24  ./installer_linux
+   25  source ~/.bash_profile
+   26  cd cri-dockerd
+   27  mkdir bin
+   28  go build -o bin/cri-dockerd
+   29  mkdir -p /usr/local/bin
+   30  install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/cri-dockerd
+   31  cp -a packaging/systemd/* /etc/systemd/system
+   32  sed -i -e 's,/usr/bin/cri-dockerd,/usr/local/bin/cri-dockerd,' /etc/systemd/system/cri-docker.service
+   33  systemctl daemon-reload
+   34  systemctl enable cri-docker.service
+   35  systemctl enable --now cri-docker.socketwget https://storage.googleapis.com/golang/getgo/installer_linux
+   36  chmod +x ./installer_linux
+   37  ./installer_linux
+   38  source ~/.bash_profile
+   39  cd cri-dockerd
+   40  go build -o bin/cri-dockerd
+   41  mkdir -p /usr/local/bin
+   42  install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/cri-dockerd
+   43  cp -a packaging/systemd/* /etc/systemd/system
+   44  sed -i -e 's,/usr/bin/cri-dockerd,/usr/local/bin/cri-dockerd,' /etc/systemd/system/cri-docker.service
+   45  systemctl daemon-reload
+   46  systemctl enable cri-docker.service
+   47  systemctl enable --now cri-docker.socket
+   48  systemctl enable cri-docker.service
+   49  systemctl status cri-docker.socket
+   50  sudo apt-get update
+   51  sudo apt-get install -y apt-transport-https ca-certificates curl
+   52  sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+   53  echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+   54  sudo apt-get update
+   55  sudo apt-get install -y kubelet kubeadm kubectl
+   56  hostnamectl set-hostname master
+   57  hostnamectl
+   58  kubeadm init
+   59  kubeadm init --cri-socket unix:///var/run/cri-dockerd.sock
+   60  vi .bashrc
+   61  ls
+   62  ls -la
+   63  cd /home/
+   64  ls -a
+   65  cd ubuntu/
+   66  ls -la
+   67  vi .bashrc
+   68  kubectl get nodes
+   69  source .bashrc
+   70  kubectl get nodes
+
+
+
+
+
+
+on worker nodes
+
+run
+
+1  curl -fsSL https://get.docker.com -o get-docker.sh
+    2  sudo sh ./get-docker.sh --dry-run
+    3  curl -fsSL https://get.docker.com -o get-docker.sh
+    4  sudo sh get-docker.sh
+    5  docker --version
+    6  vi /etc/docker/daemon.json
+    7  systemctl restart docker
+    8  cat /etc/docker/daemon.json
+    9  vi /etc/docker/daemon.json
+   10  systemctl restart docker
+   11  git clone https://github.com/Mirantis/cri-dockerd.git
+   12  # Run these commands as root
+   13  ###Install GO###
+   14  wget https://storage.googleapis.com/golang/getgo/installer_linux
+   15  chmod +x ./installer_linux
+   16  ./installer_linux
+   17  source ~/.bash_profile
+   18  cd cri-dockerd
+   19  mkdir bin
+   20  go build -o bin/cri-dockerd
+   21  systemctl status cri-docker.socket
+   22  # Run these commands as root
+   23  ###Install GO###
+   24  wget https://storage.googleapis.com/golang/getgo/installer_linux
+   25  chmod +x ./installer_linux
+   26  ./installer_linux
+   27  source ~/.bash_profile
+   28  cd cri-dockerd
+   29  mkdir bin
+   30  go build -o bin/cri-dockerd
+   31  mkdir -p /usr/local/bin
+   32  install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/cri-dockerd
+   33  cp -a packaging/systemd/* /etc/systemd/system
+   34  sed -i -e 's,/usr/bin/cri-dockerd,/usr/local/bin/cri-dockerd,' /etc/systemd/system/cri-docker.service
+   35  systemctl daemon-reload
+   36  systemctl enable cri-docker.service
+   37  systemctl enable --now cri-docker.socketwget https://storage.googleapis.com/golang/getgo/installer_linux
+   38  chmod +x ./installer_linux
+   39  ./installer_linux
+   40  source ~/.bash_profile
+   41  cd cri-dockerd
+   42  go build -o bin/cri-dockerd
+   43  mkdir -p /usr/local/bin
+   44  install -o root -g root -m 0755 bin/cri-dockerd /usr/local/bin/cri-dockerd
+   45  cp -a packaging/systemd/* /etc/systemd/system
+   46  sed -i -e 's,/usr/bin/cri-dockerd,/usr/local/bin/cri-dockerd,' /etc/systemd/system/cri-docker.service
+   47  systemctl daemon-reload
+   48  systemctl enable cri-docker.service
+   49  systemctl enable --now cri-docker.socket
+   50  systemctl enable cri-docker.service
+   51  systemctl status cri-docker.socket
+   52  sudo apt-get update
+   53  sudo apt-get install -y apt-transport-https ca-certificates curl
+   54  sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+   55  echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+   56  sudo apt-get update
+   57  sudo apt-get install -y kubelet kubeadm kubectl
+   58  kubeadm join 172.31.25.87:6443 --token sivplw.badl9cverwnum8qh         --discovery-token-ca-cert-hash sha256:09cd48f51267ca58179871e17c191e55cb3b508500e289b61a4e2ea695479aad
+   59  kubeadm join 172.31.25.87:6443 --token sivplw.badl9cverwnum8qh         --discovery-token-ca-cert-hash sha256:09cd48f51267ca58179871e17c191e55cb3b508500e289b61a4e2ea695479aad --cri-socket unix:///var/run/cri-dockerd.sock
+   60  history
+
+
+
+
+
+
+
+

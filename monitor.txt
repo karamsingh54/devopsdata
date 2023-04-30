@@ -1,0 +1,161 @@
+monitoring command 
+
+ps (process listing command)
+
+current terminal process
+
+
+ps -aux 
+
+for all term output
+user  PID  CPU  MEM   VSz   RSS  TTY  stat start  
+
+
+top
+
+
+refresh in every 3 secind
+
+PR periority
+NI 
+
+
+
+
+
+uptime 
+
+user uptime and load 
+
+htop 
+
+iotop 
+
+
+iostat
+
+dnf install systat
+
+netstat
+
+-tulpn
+
+
+netstat
+
+vmstat
+
+virtual memmory status
+
+sar 
+
+system activity reporter
+
+
+real time
+
+
+nmap 
+
+dnf install nmap
+
+
+show server application os of all connetcted machine
+
+
+dmidecode
+
+ tcpdump/wireshark
+
+
+AIDE  advanced intrusion detection env
+
+
+aide package
+
+
+dnf info aide
+
+aide --init
+/etc/aide.conf
+
+/var/lib/aide
+/var/log/aide
+
+aide --check
+
+ 
+
+
+
+netstat -putan
+
+
+netstat -r
+netstat -i
+
+
+netsat -ap
+
+
+proto    
+
+dmidecode -t
+
+
+dmidecode -t system
+
+
+sar command
+
+
+sar 5 2 
+
+
+sar -b
+
+
+sar --human
+
+top 
+
+live monitoring
+
+
+vsz :  
+
+res  :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+wget 
+tar 
+openssl-devel
+
+ 
+
+
+
+configure domain
+
+
+useradd ngios 
+groupadd nagcmd
+usermod -G nagcmd nagios
+usermod -G nagcmd apache
+
+
+
+
+

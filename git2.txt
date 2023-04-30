@@ -1,0 +1,156 @@
+satnam@123@wahe
+
+
+git checkout -b tink2
+
+git branch 
+
+
+git checkout master 
+git merge kgg
+
+
+rebase/squash
+
+
+
+git log --oneline
+
+git reset --soft commit id
+git reset --mixed commit id
+git reset --hard commit -id
+
+
+
+username ram
+passwd
+
+su - ram
+
+mkdir 
+
+
+
+
+git config --system user.name "system user"
+
+
+
+
+
+
+
+
+git merge branch2
+
+
+git merge --squash branch3
+
+
+
+
+
+
+
+git checkout newbranch
+
+nake file commit 
+
+git checkout master 
+
+git merge newbranch
+
+git log --oneline
+
+
+
+
+git rebase master
+
+
+
+git branch update2
+
+make files 
+
+gkit log --one
+
+
+git checkout master
+
+git log --oneline
+
+git merge -- squash update
+
+
+git status 
+
+
+git commit -m" final changes by 3rd branch"
+
+
+
+
+
+git checkoi -b final
+
+
+some files commit
+
+
+
+
+git log
+
+
+git checkout master 
+
+make one file commit
+
+
+checkoiuit final
+
+git rebase master
+
+
+
+
+
+
+
+hook configuration 
+
+
+
+
+
+
+
+
+checkot ipad brach 
+
+
+vim same file change 
+
+
+
+git conflict 
+
+git status
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

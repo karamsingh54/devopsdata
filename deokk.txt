@@ -1,0 +1,15 @@
+https://github.com/karamsingh54/devops-final-project.git
+
+
+rsync -e ssh /var/lib/jenkins/workspace/devops-final-project/Dockerfile root@172.31.59.64:/tinku
+
+cd /tinku
+docker build -t $JOB_NAME:v$BUILD_ID .
+docker image tag $JOB_NAME:v$BUILD_ID karamsingh54/$JOB_NAME:v$BUILD_ID
+docker image tag $JOB_NAME:v$BUILD_ID karamsingh54/$JOB_NAME:latest
+docker image push karamsingh54/$JOB_NAME:v$BUILD_ID
+docker image push karamsingh54/$JOB_NAME:latest
+docker image rmi $JOB_NAME:v$BUILD_ID karamsingh54/$JOB_NAME:v$BUILD_ID karamsingh54/$JOB_NAME:latest
+
+
+ansible-playbook /tinku/ansi.yml

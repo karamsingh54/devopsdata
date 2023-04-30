@@ -1,0 +1,116 @@
+docker container run -d --name website -p 80:80 httpd
+
+docker container ls
+ 
+
+docker container rm --force 
+
+docker conatiner ls -a
+
+
+docker conatiner run -d --name karam -p 80:80 nginx
+
+
+docker container rm --force karam
+
+docker conatainer run -d --name karam 80:80 httpd
+
+docker conatiner -d --name tinku -p 8080:80 nginx
+
+docker conatiner cp . karam:/usr/local/apache2/htdocs
+
+
+docker restart policy
+
+
+
+docker container run -d --restart on failure httpd
+
+
+dcoker container run -d ubuntu sleep 10
+
+
+
+dcoker container run -d --restart always ubuntu sleep 10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+docker container run -d --name karam 80:80 nginx:latest
+
+
+
+
+docker container commit -a "karam singh" mywebsite:v2      commit method 
+
+
+
+
+
+docker container ls
+
+docker conatiner stop and rm karam
+
+
+docker container run -d --name myname -p 80:80 mywebsite:v2
+
+
+docker login registry.redhat.io
+
+
+docker login 
+
+
+docker image push mywebsite:v4 registry.redhat.io
+
+
+
+docker image tag website:v4 karamsingh54/mywebsite
+
+
+docker image prune -a
+
+
+
+
+docker run -d --name rupesh -p 80:80  username /image name 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/home/ec2-user/zomato/docker
+
+
+
